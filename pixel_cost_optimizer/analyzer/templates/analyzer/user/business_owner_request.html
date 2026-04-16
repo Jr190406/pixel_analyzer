@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Account Request</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header h1 i {
+            color: #667eea;
+        }
+        
+        .header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .benefits {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .benefits h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #424242;
+        }
+        
+        .benefit-item i {
+            color: #4caf50;
+            font-size: 1.2rem;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .help-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+        
+        .submission-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .submission-info h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .submission-info ul {
+            color: #856404;
+            padding-left: 20px;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        /* Alert Messages */
+        .messages {
+            margin: 20px 0;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .alert-success {
+            background: linear-gradient(45deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-info {
+            background: linear-gradient(45deg, #d1ecf1, #bee5eb);
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .alert-warning {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .alert-error {
+            background: linear-gradient(45deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden dashboard URL for JavaScript -->
+    <div id="dashboard-url" style="display: none;">{% if request.user.userprofile.role == 'super_admin' %}{% url 'super_admin_dashboard' %}{% elif request.user.userprofile.role == 'business_owner' %}{% url 'business_owner_dashboard' %}{% else %}{% url 'regular_user_dashboard' %}{% endif %}</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-crown"></i>
+                Premium Account Request
+            </h1>
+            <p>Request access to premium features and advanced printing options</p>
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin: 20px 0; color: #1976d2;">
+                <strong>Current User:</strong> {{ user.username }} 
+                {% if user.is_superuser %}
+                    <span style="color: #d32f2f;">(Super Admin - Note: This form is for regular users requesting premium access)</span>
+                {% else %}
+                    <span style="color: #388e3c;">(Regular User)</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif message.tags == 'info' %}
+                            <i class="fas fa-info-circle"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                        {% elif message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="benefits">
+            <h3>
+                <i class="fas fa-crown"></i>
+                Premium Account Benefits
+            </h3>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Set custom pricing rules</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Advanced analytics dashboard</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-users"></i>
+                    <span>Advanced user management</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Premium configuration options</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-headset"></i>
+                    <span>Priority customer support</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Detailed reporting features</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="submission-info">
+            <h4>
+                <i class="fas fa-info-circle"></i>
+                How the Process Works
+            </h4>
+            <ul>
+                <li>Submit this form with your information</li>
+                <li>Our team will review your application within 1-2 business days</li>
+                <li>You'll receive an email notification about the approval status</li>
+                <li>Once approved, your account will be upgraded automatically</li>
+                <li>You can then access the business pricing dashboard</li>
+            </ul>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Business Information -->
+            <div class="form-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Basic Information
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="business_name">
+                            <i class="fas fa-store"></i>
+                            Business Name <span class="required">*</span>
+                        </label>
+                        <input type="text" id="business_name" name="business_name" required 
+                               placeholder="Your official business name">
+                        <div class="help-text">Enter your official registered business name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business_type">
+                            <i class="fas fa-tag"></i>
+                            Business Type <span class="required">*</span>
+                        </label>
+                        <input type="text" id="business_type" name="business_type" required 
+                               placeholder="e.g., Print Shop, Copy Center, Design Studio">
+                        <div class="help-text">What type of business do you operate?</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="business_address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Business Address <span class="required">*</span>
+                    </label>
+                    <textarea id="business_address" name="business_address" required 
+                              placeholder="Complete business address including city and postal code"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="business_phone">
+                            <i class="fas fa-phone"></i>
+                            Business Phone <span class="required">*</span>
+                        </label>
+                        <input type="tel" id="business_phone" name="business_phone" required 
+                               placeholder="+63 XXX XXX XXXX">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business_email">
+                            <i class="fas fa-envelope"></i>
+                            Business Email <span class="required">*</span>
+                        </label>
+                        <input type="email" id="business_email" name="business_email" required 
+                               placeholder="business@company.com">
+                    </div>
+                </div>
+            </div>
+
+
+            
+            <div class="buttons">
+                <a href="{% if request.user.userprofile.role == 'super_admin' %}{% url 'super_admin_dashboard' %}{% elif request.user.userprofile.role == 'business_owner' %}{% url 'business_owner_dashboard' %}{% else %}{% url 'regular_user_dashboard' %}{% endif %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Premium Request
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+                
+                // Show immediate feedback
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                submitBtn.disabled = true;
+                
+                // Prepare form data
+                const formData = new FormData(form);
+                
+                // Submit form via AJAX
+                fetch(form.action || window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Show success alert
+                        alert('✅ SUCCESS: Your premium account request has been submitted successfully!\n\nOur team will review your application within 1-2 business days and notify you via email.');
+                        
+                        // Redirect to appropriate dashboard after alert
+                        const dashboardUrl = document.getElementById('dashboard-url').textContent;
+                        window.location.href = dashboardUrl;
+                    } else {
+                        throw new Error('Submission failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('❌ ERROR: There was a problem submitting your request. Please try again.');
+                    
+                    // Restore button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

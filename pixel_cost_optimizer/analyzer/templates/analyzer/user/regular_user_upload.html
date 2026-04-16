@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Document - Document Analyzer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header h1 i {
+            color: #667eea;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .logout-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .logout-btn:hover {
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+        
+        /* Upload Section Styles */
+        .upload-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #667eea;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 50px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .upload-subtext {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .file-info {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px auto 0;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .upload-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Progress Section */
+        .progress-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .progress-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 25px;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 25px;
+        }
+        
+        /* Loading Icon */
+        .loading-icon {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            color: #667eea;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Error Message */
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #dc3545;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Success Message */
+        .success-message {
+            background: #d1edff;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #0dcaf0;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Results Section */
+        .results-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .total-cost {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+        
+        .total-cost h3 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .total-amount {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .results-column h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .image-result {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+        
+        .image-result:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-result img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-info {
+            font-size: 0.9rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .info-value {
+            color: #6c757d;
+        }
+        
+        .cost-value {
+            color: #28a745;
+            font-weight: 700;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #6c757d;
+            padding: 40px;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* Cost Breakdown Styles */
+        .cost-breakdown {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .breakdown-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .breakdown-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .breakdown-card h4 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculation-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .calculation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .page-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .page-number {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .coverage-info {
+            color: #6c757d;
+        }
+        
+        .cost-formula {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .formula-breakdown {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .formula-text {
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .formula-result {
+            color: #28a745;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .subtotal {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #667eea;
+            text-align: center;
+        }
+        
+        .subtotal-label {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .subtotal-amount {
+            color: #28a745;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .grand-total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .grand-total h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .grand-total .amount {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .nav-buttons {
+                justify-content: center;
+            }
+            
+            .results-section {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .upload-area {
+                padding: 30px 20px;
+            }
+            
+            .upload-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-file-upload"></i>
+                Upload Document
+            </h1>
+            <div class="nav-buttons">
+                <a href="{% url 'regular_user_dashboard' %}" class="nav-btn">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="{% url 'user_logout' %}" class="nav-btn logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success_message %}
+        <div class="success-message">
+            <i class="fas fa-check-circle"></i>
+            {{ success_message }}
+        </div>
+        {% endif %}
+        
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'success' %}
+                <div class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2 class="section-title">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload Your Document
+            </h2>
+            
+            <form id="uploadForm" action="{% url 'handle_regular_user_upload' %}" method="post" enctype="multipart/form-data" onsubmit="return handleFormSubmission()">
+                {% csrf_token %}
+                <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Drop your document here or click to browse</div>
+                    <div class="upload-subtext">Supports PDF, JPG, PNG files (up to 10MB)</div>
+                    <input type="file" id="file-input" name="file" accept=".pdf,.jpg,.jpeg,.png" required onchange="showFileInfo(this)">
+                </div>
+                <div class="file-info" id="file-info"></div>
+                <button type="submit" class="upload-btn" id="upload-btn" disabled>
+                    <i class="fas fa-upload"></i>
+                    Analyze Document
+                </button>
+            </form>
+
+            <!-- Progress Section -->
+            <div class="progress-section" id="progressContainer">
+                <div class="progress-label">
+                    <i class="fas fa-hourglass-start"></i>
+                    Preparing analysis... <span id="progressText">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <!-- Loading Icon -->
+            <div class="loading-icon" id="loadingIcon">
+                <div class="spinner"></div>
+                <p>Processing your document...</p>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        {% if color_images or bw_images %}
+        <div class="results-container">
+            <!-- Total Cost -->
+            <div class="total-cost">
+                <h3>
+                    <i class="fas fa-calculator"></i>
+                    Total Cost: <span class="total-amount">₱{{ overall_cost }}</span>
+                </h3>
+            </div>
+
+            <div class="results-section">
+                <div class="results-column">
+                    <h2><i class="fas fa-palette"></i>Color Images</h2>
+                    {% for img in color_images %}
+                    <div class="image-result">
+                        <img src="{{ img.image_path }}" alt="Color Image">
+                        <div class="image-info">
+                            <div class="info-item">
+                                <span class="info-label">Cost:</span>
+                                <span class="info-value cost-value">₱{{ img.cost }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Coverage:</span>
+                                <span class="info-value">{{ img.coverage_percentage }}%</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Reason:</span>
+                                <span class="info-value">{{ img.cost_reason }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Type:</span>
+                                <span class="info-value">{{ img.image_type }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-image"></i>
+                        <p>No color images found</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="results-column">
+                    <h2><i class="fas fa-adjust"></i>Black & White Images</h2>
+                    {% for img in bw_images %}
+                    <div class="image-result">
+                        <img src="{{ img.image_path }}" alt="B&W Image">
+                        <div class="image-info">
+                            <div class="info-item">
+                                <span class="info-label">Cost:</span>
+                                <span class="info-value cost-value">₱{{ img.cost }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Coverage:</span>
+                                <span class="info-value">{{ img.coverage_percentage }}%</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Reason:</span>
+                                <span class="info-value">{{ img.cost_reason }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Type:</span>
+                                <span class="info-value">{{ img.image_type }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-image"></i>
+                        <p>No black & white images found</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cost Breakdown Section -->
+        <div class="cost-breakdown">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Cost Breakdown
+            </h2>
+            
+            <div class="breakdown-grid">
+                <!-- Color Images Summary -->
+                {% if color_images %}
+                <div class="breakdown-card">
+                    <h4>
+                        <i class="fas fa-palette"></i>
+                        Color Images
+                    </h4>
+                    
+                    <div class="cost-formula">
+                        <div class="formula-breakdown">
+                            <span class="formula-text">
+                                {{ color_images|length }} Color Page{{ color_images|length|pluralize }}
+                            </span>
+                            <span class="formula-result">
+                                {% for img in color_images %}₱{{ img.cost }}{% if not forloop.last %} + {% endif %}{% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="subtotal">
+                        <div class="subtotal-label">Color Images Total</div>
+                        <div class="subtotal-amount">
+                            {{ color_images|length }} page{{ color_images|length|pluralize }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Black & White Images Summary -->
+                {% if bw_images %}
+                <div class="breakdown-card">
+                    <h4>
+                        <i class="fas fa-adjust"></i>
+                        Black & White Images
+                    </h4>
+                    
+                    <div class="cost-formula">
+                        <div class="formula-breakdown">
+                            <span class="formula-text">
+                                {{ bw_images|length }} B&W Page{{ bw_images|length|pluralize }}
+                            </span>
+                            <span class="formula-result">
+                                {% for img in bw_images %}₱{{ img.cost }}{% if not forloop.last %} + {% endif %}{% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="subtotal">
+                        <div class="subtotal-label">B&W Images Total</div>
+                        <div class="subtotal-amount">
+                            {{ bw_images|length }} page{{ bw_images|length|pluralize }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Grand Total Summary -->
+            <div class="grand-total">
+                <h3>
+                    <i class="fas fa-calculator"></i>
+                    Total Document Cost
+                </h3>
+                <div class="amount">₱{{ overall_cost }}</div>
+                <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.9;">
+                    {% if color_images and bw_images %}
+                        Color Pages + B&W Pages = Final Total
+                    {% elif color_images %}
+                        All Color Pages
+                    {% elif bw_images %}
+                        All Black & White Pages
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Global session ID for progress tracking
+        let sessionId = null;
+        
+        function showFileInfo(input) {
+            const fileInfo = document.getElementById('file-info');
+            const uploadBtn = document.getElementById('upload-btn');
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                
+                fileInfo.innerHTML = `
+                    <strong>Selected file:</strong> ${file.name}<br>
+                    <strong>Size:</strong> ${fileSize} MB<br>
+                    <strong>Type:</strong> ${file.type}
+                `;
+                fileInfo.style.display = 'block';
+                uploadBtn.disabled = false;
+            }
+        }
+
+        function startLoading() {
+            // This function is now simplified and called from handleFormSubmission
+            console.log('Starting loading animation');
+        }
+        
+        function handleFormSubmission() {
+            // Start loading animation
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('loadingIcon').style.display = 'block';
+            document.getElementById('upload-btn').disabled = true;
+            
+            // Generate session ID and add to form
+            sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            console.log('Generated session ID:', sessionId);
+            
+            // Add session ID to form as hidden input
+            const form = document.getElementById('uploadForm');
+            const sessionInput = document.createElement('input');
+            sessionInput.type = 'hidden';
+            sessionInput.name = 'session_id';
+            sessionInput.value = sessionId;
+            form.appendChild(sessionInput);
+            
+            // Start progress checking
+            setTimeout(() => {
+                checkProgress();
+            }, 1000);
+            
+            // Allow form to submit normally
+            return true;
+        }
+        
+        function checkProgress() {
+            if (sessionId) {
+                console.log('Checking progress for:', sessionId);
+                fetch(`/progress/?session_id=${sessionId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Progress data:', data);
+                        if (data.progress !== undefined) {
+                            // Update progress bar
+                            const progressFill = document.getElementById('progressBarFill');
+                            const progressText = document.getElementById('progressText');
+                            const progressLabel = document.querySelector('.progress-label');
+                            
+                            progressFill.style.width = data.progress + '%';
+                            progressText.textContent = data.progress + '%';
+                            
+                            // Update status message with appropriate icon
+                            let icon = 'fa-spinner fa-spin';
+                            if (data.progress >= 0 && data.progress < 15) {
+                                icon = 'fa-upload fa-spin';
+                            } else if (data.progress >= 15 && data.progress < 30) {
+                                icon = 'fa-file-pdf fa-spin';
+                            } else if (data.progress >= 30 && data.progress < 50) {
+                                icon = 'fa-images fa-spin';
+                            } else if (data.progress >= 50 && data.progress < 75) {
+                                icon = 'fa-search fa-spin';
+                            } else if (data.progress >= 75 && data.progress < 90) {
+                                icon = 'fa-calculator fa-spin';
+                            } else if (data.progress >= 90 && data.progress < 100) {
+                                icon = 'fa-chart-line fa-spin';
+                            } else if (data.progress >= 100) {
+                                icon = 'fa-check-circle text-success';
+                            }
+                            
+                            progressLabel.innerHTML = `<i class="fas ${icon}"></i> ${data.status} <span id="progressText">${data.progress}%</span>`;
+                            
+                            // Continue checking unless complete
+                            if (data.progress < 100) {
+                                setTimeout(checkProgress, 500);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Progress check failed:', error);
+                        // Continue checking in case of temporary network issues
+                        setTimeout(checkProgress, 1000);
+                    });
+            }
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#764ba2';
+            uploadArea.style.background = 'rgba(102, 126, 234, 0.1)';
+        });
+        
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = 'transparent';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = 'transparent';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('file-input').files = files;
+                showFileInfo(document.getElementById('file-input'));
+            }
+        });
+    </script>
+</body>
+</html>

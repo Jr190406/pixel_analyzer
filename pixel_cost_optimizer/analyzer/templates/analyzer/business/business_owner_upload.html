@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Owner Document Analysis</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .upload-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .upload-area {
+            border: 3px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .upload-area:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .upload-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .upload-subtext {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            display: none;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .paper-size-selection {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .paper-size-label {
+            display: block;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .paper-size-label i {
+            margin-right: 8px;
+            color: #28a745;
+        }
+        
+        .paper-size-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .paper-size-select:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .paper-size-select:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+        }
+        
+        .paper-size-select option {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .upload-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Results Section */
+        .results-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .total-cost {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+        
+        .total-cost h3 {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 0;
+        }
+        
+        .total-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+        
+        /* Print Action Section */
+        .print-action-section {
+            margin-bottom: 30px;
+        }
+        
+        .print-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .print-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .print-header h4 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .print-header h4 i {
+            color: #17a2b8;
+        }
+        
+        .print-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+        
+        .print-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .option-group label {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .option-group select,
+        .option-group input {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .option-group select:focus,
+        .option-group input:focus {
+            outline: none;
+            border-color: #17a2b8;
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+        }
+        
+        .print-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .print-btn {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+        }
+        
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        }
+        
+        .history-btn {
+            background: rgba(108, 117, 125, 0.1);
+            color: #495057;
+            border: 2px solid #6c757d;
+            padding: 13px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .history-btn:hover {
+            background: rgba(108, 117, 125, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .results-column h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .image-result {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .image-result img {
+            width: 160px;
+            height: auto;
+            border-radius: 8px;
+            flex: 0 0 160px;
+            display: block;
+        }
+
+        .image-info {
+            color: white;
+            flex: 1 1 auto;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            padding: 2px 0;
+            border-bottom: none;
+            font-size: 0.95rem;
+        }
+        
+        .info-label {
+            font-weight: 600;
+        }
+        
+        .cost-value {
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 40px;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .error-section {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+        }
+        
+        /* Progress Bar Styles */
+        .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .progress-header h3 {
+            color: white;
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+        }
+        
+        .progress-status {
+            color: #00d4ff;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        
+        .progress-bar-wrapper {
+            margin: 25px 0;
+        }
+        
+        .progress-bar {
+            position: relative;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #0099cc);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            animation: progressShimmer 2s infinite;
+        }
+        
+        @keyframes progressShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .progress-details {
+            margin-top: 25px;
+        }
+        
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .stat-item i {
+            width: 16px;
+            color: #00d4ff;
+        }
+        
+        .current-operation {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .current-operation i {
+            color: #00d4ff;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .results-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .upload-area {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-crown"></i>
+                Business Owner Analysis
+            </h1>
+            <div class="nav-buttons">
+                <a href="{% url 'business_owner_dashboard' %}" class="nav-btn">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+                <a href="{% url 'user_logout' %}" class="nav-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+        
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <form id="uploadForm" action="{% url 'business_owner_upload' %}" method="post" enctype="multipart/form-data" onsubmit="return handleFormSubmission()">
+                {% csrf_token %}
+                <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Drop your document here or click to browse</div>
+                    <div class="upload-subtext">Support for PDF, JPG, PNG files • Up to 25MB</div>
+                    
+                    <input type="file" id="file-input" name="document" class="file-input" 
+                           accept=".pdf,.jpg,.jpeg,.png" required onchange="showFileInfo(this)">
+                </div>
+                
+                <div class="file-info" id="file-info"></div>
+                
+                <!-- Paper Size Selection -->
+                <div class="paper-size-selection" id="paper-size-selection" style="display: none;">
+                    <label for="paper-size" class="paper-size-label">
+                        <i class="fas fa-file-alt"></i>
+                        Select Paper Size:
+                    </label>
+                    <div style="display: flex; gap: 30px; align-items: center;">
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="short" required {% if paper_size == 'short' %}checked{% endif %}>
+                            Letter (8.5" x 11")
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="long" {% if paper_size == 'long' %}checked{% endif %}>
+                            Legal (8.5" x 14")
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="a4" {% if paper_size == 'a4' or not paper_size %}checked{% endif %}>
+                            A4 (210mm x 297mm)
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="tabloid" {% if paper_size == 'tabloid' %}checked{% endif %}>
+                            Tabloid / Ledger (11" x 17")
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="a3" {% if paper_size == 'a3' %}checked{% endif %}>
+                            A3 (297mm x 420mm)
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="a3_plus" {% if paper_size == 'a3_plus' %}checked{% endif %}>
+                            A3+ (329mm x 483mm)
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="b4" {% if paper_size == 'b4' %}checked{% endif %}>
+                            B4 (250mm x 353mm)
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="b3" {% if paper_size == 'b3' %}checked{% endif %}>
+                            B3 (353mm x 500mm)
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="statement" {% if paper_size == 'statement' %}checked{% endif %}>
+                            Statement (5.5" x 8.5")
+                        </label>
+                        <label style="color: white; font-weight: 500;">
+                            <input type="radio" name="paper_size" value="executive" {% if paper_size == 'executive' %}checked{% endif %}>
+                            Executive (7.25" x 10.5")
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="upload-btn" id="upload-btn" disabled>
+                    <i class="fas fa-play"></i>
+                    Start Analysis
+                </button>
+            </form>
+        </div>
+        
+        <!-- Real-Time Progress Bar -->
+        <div class="progress-container" id="progress-container" style="display: none;">
+            <div class="progress-header">
+                <h3>
+                    <i class="fas fa-cogs"></i>
+                    Processing Your Document
+                </h3>
+                <div class="progress-status" id="progress-status">Initializing...</div>
+            </div>
+            
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                    <div class="progress-text" id="progress-text">0%</div>
+                </div>
+            </div>
+            
+            <div class="progress-details">
+                <div class="progress-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Pages: <span id="pages-processed">0</span>/<span id="total-pages">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-palette"></i>
+                        <span>Color: <span id="color-count">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-circle"></i>
+                        <span>B&W: <span id="bw-count">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Cost: ₱<span id="current-cost">0.00</span></span>
+                    </div>
+                </div>
+                
+                <div class="current-operation" id="current-operation">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span id="operation-text">Starting analysis...</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        {% if color_images or bw_images %}
+        <div class="results-container">
+            <!-- Total Cost -->
+            <div class="total-cost">
+                <h3>
+                    <i class="fas fa-calculator"></i>
+                    Total Cost: <span class="total-amount">₱{{ overall_cost }}</span>
+                </h3>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">
+                    {{ total_pages }} page{{ total_pages|pluralize }} • {{ file_name }}
+                </p>
+            </div>
+
+            <!-- Print Action Section -->
+            {% if analysis_id %}
+            <div class="print-action-section">
+                <div class="print-card">
+                    <div class="print-header">
+                        <h4>
+                            <i class="fas fa-print"></i>
+                            Ready to Print?
+                        </h4>
+                        <p>Analysis complete! Queue this document for printing.</p>
+                    </div>
+                    
+                    <form method="post" action="{% url 'print_document' %}" class="print-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="analysis_id" value="{{ analysis_id }}">
+                        
+                        <div class="print-options">
+                            <div class="option-group">
+                                <label for="print-paper-size">Paper Size:</label>
+                                <select name="paper_size" id="print-paper-size" required>
+                                    <option value="short" {% if paper_size == 'short' %}selected{% endif %}>Letter (8.5" x 11")</option>
+                                    <option value="long" {% if paper_size == 'long' %}selected{% endif %}>Legal (8.5" x 14")</option>
+                                    <option value="a4" {% if paper_size == 'a4' or not paper_size %}selected{% endif %}>A4 (210mm x 297mm)</option>
+                                    <option value="tabloid" {% if paper_size == 'tabloid' %}selected{% endif %}>Tabloid / Ledger (11" x 17")</option>
+                                    <option value="a3" {% if paper_size == 'a3' %}selected{% endif %}>A3 (297mm x 420mm)</option>
+                                    <option value="statement" {% if paper_size == 'statement' %}selected{% endif %}>Statement (5.5" x 8.5")</option>
+                                    <option value="executive" {% if paper_size == 'executive' %}selected{% endif %}>Executive (7.25" x 10.5")</option>
+                                </select>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label for="copies">Number of Copies:</label>
+                                <input type="number" name="copies" id="copies" value="1" min="1" max="100" required>
+                            </div>
+                        </div>
+                        
+                        <div class="print-actions">
+                            <button type="submit" class="print-btn">
+                                <i class="fas fa-print"></i>
+                                Queue for Printing
+                            </button>
+                            <a href="{% url 'print_history' %}" class="history-btn">
+                                <i class="fas fa-history"></i>
+                                Print History
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="results-section">
+                <!-- Color Images Column -->
+                <div class="results-column">
+                    <h2>
+                        <i class="fas fa-palette"></i>
+                        Color Images
+                    </h2>
+                    {% for img in color_images %}
+                    <div class="image-result">
+                        <img src="{{ img.image_path }}" alt="Color Image">
+                        <div class="image-info">
+                            <div class="info-item">
+                                <span class="info-label">Cost:</span>
+                                <span class="info-value cost-value">₱{{ img.cost_formatted|default:img.cost }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Coverage:</span>
+                                <span class="info-value">{{ img.coverage_percentage }}%</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Type:</span>
+                                <span class="info-value">{{ img.image_type }}</span>
+                            </div>
+                            {% if img.page_number %}
+                            <div class="info-item">
+                                <span class="info-label">Page:</span>
+                                <span class="info-value">{{ img.page_number }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-palette"></i>
+                        <p>No color images found</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Black & White Images Column -->
+                <div class="results-column">
+                    <h2>
+                        <i class="fas fa-file-alt"></i>
+                        Black & White Images
+                    </h2>
+                    {% for img in bw_images %}
+                    <div class="image-result">
+                        <img src="{{ img.image_path }}" alt="B&W Image">
+                        <div class="image-info">
+                            <div class="info-item">
+                                <span class="info-label">Cost:</span>
+                                <span class="info-value cost-value">₱{{ img.cost_formatted|default:img.cost }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Coverage:</span>
+                                <span class="info-value">{{ img.coverage_percentage }}%</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Type:</span>
+                                <span class="info-value">{{ img.image_type }}</span>
+                            </div>
+                            {% if img.page_number %}
+                            <div class="info-item">
+                                <span class="info-label">Page:</span>
+                                <span class="info-value">{{ img.page_number }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>No black & white images found</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% elif error %}
+        <!-- Error Section -->
+        <div class="results-container">
+            <div class="error-section">
+                <h4 style="color: #dc3545; margin-bottom: 15px;">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    Error
+                </h4>
+                <p>{{ error }}</p>
+            </div>
+        </div>
+        {% elif success_message %}
+        <!-- No Results but Success Message -->
+        <div class="results-container">
+            <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 15px; padding: 20px; color: white;">
+                <h4 style="color: #ffc107; margin-bottom: 15px;">
+                    <i class="fas fa-info-circle"></i> 
+                    Processing Complete
+                </h4>
+                <p>{{ success_message }}</p>
+                <p style="margin-top: 10px; opacity: 0.8;">
+                    No image results found. This might indicate an issue with the document processing or the document contains no analyzable content.
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Progress tracking system
+        let sessionId = null;
+        
+        function handleFormSubmission() {
+            // Start loading animation
+            document.getElementById('progress-container').style.display = 'block';
+            document.getElementById('upload-btn').disabled = true;
+            
+            // Generate session ID and add to form
+            sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            console.log('Generated session ID:', sessionId);
+            
+            // Add session ID to form as hidden input
+            const form = document.getElementById('uploadForm');
+            const sessionInput = document.createElement('input');
+            sessionInput.type = 'hidden';
+            sessionInput.name = 'session_id';
+            sessionInput.value = sessionId;
+            form.appendChild(sessionInput);
+            
+            // Start progress checking
+            setTimeout(() => {
+                checkProgress();
+            }, 1000);
+            
+            // Allow form to submit normally
+            return true;
+        }
+        
+        function checkProgress() {
+            if (sessionId) {
+                console.log('Checking progress for:', sessionId);
+                fetch(`/progress/?session_id=${sessionId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Progress data:', data);
+                        if (data.progress !== undefined) {
+                            // Update progress bar
+                            const progressFill = document.getElementById('progress-fill');
+                            const progressText = document.getElementById('progress-text');
+                            const progressStatus = document.getElementById('progress-status');
+                            const operationText = document.getElementById('operation-text');
+                            
+                            progressFill.style.width = data.progress + '%';
+                            progressText.textContent = data.progress + '%';
+                            
+                            // Update real-time statistics
+                            if (data.pages_processed !== undefined) {
+                                document.getElementById('pages-processed').textContent = data.pages_processed;
+                            }
+                            if (data.total_pages !== undefined) {
+                                document.getElementById('total-pages').textContent = data.total_pages;
+                            }
+                            if (data.color_count !== undefined) {
+                                document.getElementById('color-count').textContent = data.color_count;
+                            }
+                            if (data.bw_count !== undefined) {
+                                document.getElementById('bw-count').textContent = data.bw_count;
+                            }
+                            if (data.current_cost !== undefined) {
+                                document.getElementById('current-cost').textContent = parseFloat(data.current_cost).toFixed(2);
+                            }
+                            
+                            // Update status message with appropriate icon
+                            let icon = 'fa-spinner fa-spin';
+                            let statusMessage = data.status || 'Processing...';
+                            
+                            if (data.progress >= 0 && data.progress < 15) {
+                                icon = 'fa-upload fa-spin';
+                                statusMessage = 'Uploading document...';
+                            } else if (data.progress >= 15 && data.progress < 30) {
+                                icon = 'fa-file-pdf fa-spin';
+                                statusMessage = 'Converting PDF to images...';
+                            } else if (data.progress >= 30 && data.progress < 50) {
+                                icon = 'fa-images fa-spin';
+                                statusMessage = 'Analyzing images...';
+                            } else if (data.progress >= 50 && data.progress < 75) {
+                                icon = 'fa-search fa-spin';
+                                statusMessage = 'Detecting colors...';
+                            } else if (data.progress >= 75 && data.progress < 90) {
+                                icon = 'fa-calculator fa-spin';
+                                statusMessage = 'Calculating costs...';
+                            } else if (data.progress >= 90 && data.progress < 100) {
+                                icon = 'fa-chart-line fa-spin';
+                                statusMessage = 'Finalizing report...';
+                            } else if (data.progress >= 100) {
+                                icon = 'fa-check-circle';
+                                statusMessage = 'Analysis complete!';
+                            }
+                            
+                            progressStatus.innerHTML = `<i class="fas ${icon}"></i> ${statusMessage}`;
+                            if (operationText) {
+                                operationText.textContent = statusMessage;
+                            }
+                            
+                            // Continue checking unless complete
+                            if (data.progress < 100) {
+                                setTimeout(checkProgress, 500);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Progress check failed:', error);
+                        // Continue checking in case of temporary network issues
+                        setTimeout(checkProgress, 1000);
+                    });
+            }
+        }
+        
+        function showFileInfo(input) {
+            const fileInfo = document.getElementById('file-info');
+            const paperSizeSelection = document.getElementById('paper-size-selection');
+            const uploadBtn = document.getElementById('upload-btn');
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+                const fileType = file.type || 'Unknown';
+                
+                fileInfo.style.display = 'block';
+                fileInfo.innerHTML = `
+                    <div class="file-name">
+                        <i class="fas fa-file-alt"></i>
+                        ${file.name}
+                    </div>
+                    <div class="file-details">
+                        Size: ${fileSizeMB} MB • Type: ${fileType} • Ready for analysis
+                    </div>
+                `;
+                
+                // Show paper size selection
+                paperSizeSelection.style.display = 'block';
+                
+                uploadBtn.disabled = false;
+            } else {
+                fileInfo.style.display = 'none';
+                fileInfo.innerHTML = '';
+                paperSizeSelection.style.display = 'none';
+                uploadBtn.disabled = true;
+            }
+        }
+        
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.1)';
+        });
+        
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.05)';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.05)';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('file-input').files = files;
+                showFileInfo(document.getElementById('file-input'));
+            }
+        });
+    </script>
+</body>
+</html>

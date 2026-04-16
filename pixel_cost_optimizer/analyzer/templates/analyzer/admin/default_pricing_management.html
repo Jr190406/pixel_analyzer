@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Default Pricing Rules Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header h1 i {
+            color: #667eea;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .pricing-table th,
+        .pricing-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .pricing-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .pricing-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 500px;
+            max-width: 90vw;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .close:hover {
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-cogs"></i>
+                Default Pricing Rules Management
+            </h1>
+            <p>Configure system-wide default pricing rules for all paper types and printing options</p>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="{% url 'super_admin_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Admin Dashboard
+            </a>
+            <button onclick="showAddModal()" class="btn btn-success">
+                <i class="fas fa-plus"></i>
+                Add New Default Rule
+            </button>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Add/Edit Form Section -->
+        <div class="form-section">
+            <h3>
+                <i class="fas fa-plus-circle"></i>
+                Add New Default Pricing Rule
+            </h3>
+            <form method="post" action="{% url 'default_pricing_management' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="color">Print Type:</label>
+                        <select name="color" id="color" required>
+                            <option value="False">Black & White</option>
+                            <option value="True">Color</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="coverage_min">Coverage Min (%):</label>
+                        <input type="number" name="coverage_min" id="coverage_min" step="0.01" min="0" max="100" required placeholder="e.g., 0">
+                    </div>
+                    <div class="form-group">
+                        <label for="coverage_max">Coverage Max (%):</label>
+                        <input type="number" name="coverage_max" id="coverage_max" step="0.01" min="0" max="100" required placeholder="e.g., 10">
+                    </div>
+                    <div class="form-group">
+                        <label for="cost">Cost (₱):</label>
+                        <input type="number" name="cost" id="cost" step="0.01" min="0" required placeholder="e.g., 2.50">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reason">Reason/Description:</label>
+                    <textarea name="reason" id="reason" rows="3" placeholder="Description for this pricing rule..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i>
+                    Add Default Pricing Rule
+                </button>
+            </form>
+        </div>
+
+        <!-- Current Default Pricing Rules -->
+        <div class="form-section">
+            <h3>
+                <i class="fas fa-list"></i>
+                Current Default Pricing Rules
+            </h3>
+            {% if default_rules %}
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Paper Size</th>
+                            <th>Print Type</th>
+                            <th>Coverage Min (%)</th>
+                            <th>Coverage Max (%)</th>
+                            <th>Cost (₱)</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rule in default_rules %}
+                        <tr>
+                            <td><strong>{{ rule.get_paper_size_display }}</strong></td>
+                            <td>{% if rule.color %}<i class="fas fa-palette" style="color: #28a745;"></i> Color{% else %}<i class="fas fa-circle" style="color: #6c757d;"></i> B&W{% endif %}</td>
+                            <td>{{ rule.coverage_min }}</td>
+                            <td>{{ rule.coverage_max }}</td>
+                            <td><strong>₱{{ rule.cost }}</strong></td>
+                            <td>{{ rule.reason }}</td>
+                            <td>
+                                {% if rule.is_active %}
+                                    <span class="status-badge status-active">Active</span>
+                                {% else %}
+                                    <span class="status-badge status-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ rule.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <button class="btn btn-primary edit-rule-btn" style="padding: 6px 12px; font-size: 12px;"
+                                        data-id="{{ rule.id }}"
+                                        data-paper-size="{{ rule.paper_size }}"
+                                        data-color="{{ rule.color }}"
+                                        data-coverage-min="{{ rule.coverage_min }}"
+                                        data-coverage-max="{{ rule.coverage_max }}"
+                                        data-cost="{{ rule.cost }}"
+                                        data-reason="{{ rule.reason|default:'' }}"
+                                        data-is-active="{{ rule.is_active }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="rule_id" value="{{ rule.id }}">
+                                    <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;"
+                                            onclick="return confirm('Are you sure you want to delete this default pricing rule?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    No default pricing rules found. Add your first default pricing rule to get started.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Pricing Summary -->
+        <div class="form-section">
+            <h3>
+                <i class="fas fa-chart-bar"></i>
+                Pricing Summary
+            </h3>
+            <div class="form-grid">
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #667eea;">Total Rules</h4>
+                    <p style="font-size: 2em; font-weight: bold; color: #2c3e50;">{{ default_rules.count }}</p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #28a745;">Paper Sizes</h4>
+                    <p style="font-size: 2em; font-weight: bold; color: #2c3e50;">3</p>
+                    <small style="color: #6c757d;">Short, Long, A4</small>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #dc3545;">Print Types</h4>
+                    <p style="font-size: 2em; font-weight: bold; color: #2c3e50;">2</p>
+                    <small style="color: #6c757d;">B&W, Colored</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Edit Default Pricing Rule</h3>
+            <form method="post" action="{% url 'default_pricing_management' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="rule_id" id="editRuleId">
+                <div class="form-group">
+                    <label for="editPaperSize">Paper Size:</label>
+                    <select name="paper_size" id="editPaperSize" required>
+                        <option value="short">Letter (8.5" x 11")</option>
+                        <option value="long">Legal (8.5" x 14")</option>
+                        <option value="a4">A4 (210mm x 297mm)</option>
+                        <option value="tabloid">Tabloid / Ledger (11" x 17")</option>
+                        <option value="a3">A3 (297mm x 420mm)</option>
+                        <option value="a3_plus">A3+ (329mm x 483mm)</option>
+                        <option value="b4">B4 (250mm x 353mm)</option>
+                        <option value="b3">B3 (353mm x 500mm)</option>
+                        <option value="statement">Statement (5.5" x 8.5")</option>
+                        <option value="executive">Executive (7.25" x 10.5")</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editColor">Print Type:</label>
+                    <select name="color" id="editColor" required>
+                        <option value="False">Black & White</option>
+                        <option value="True">Color</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editCoverageMin">Coverage Min (%):</label>
+                    <input type="number" name="coverage_min" id="editCoverageMin" step="0.01" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCoverageMax">Coverage Max (%):</label>
+                    <input type="number" name="coverage_max" id="editCoverageMax" step="0.01" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCost">Cost (₱):</label>
+                    <input type="number" name="cost" id="editCost" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editReason">Reason/Description:</label>
+                    <textarea name="reason" id="editReason" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editIsActive">Status:</label>
+                    <select name="is_active" id="editIsActive" required>
+                        <option value="True">Active</option>
+                        <option value="False">Inactive</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Update Rule
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-rule-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const paperSize = this.dataset.paperSize;
+                    const color = this.dataset.color;
+                    const coverageMin = this.dataset.coverageMin;
+                    const coverageMax = this.dataset.coverageMax;
+                    const cost = this.dataset.cost;
+                    const reason = this.dataset.reason;
+                    const isActive = this.dataset.isActive;
+                    document.getElementById('editRuleId').value = id;
+                    document.getElementById('editPaperSize').value = paperSize;
+                    document.getElementById('editColor').value = color;
+                    document.getElementById('editCoverageMin').value = coverageMin;
+                    document.getElementById('editCoverageMax').value = coverageMax;
+                    document.getElementById('editCost').value = cost;
+                    document.getElementById('editReason').value = reason || '';
+                    document.getElementById('editIsActive').value = isActive;
+                    document.getElementById('editModal').style.display = 'block';
+                });
+            });
+        });
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        function showAddModal() {
+            // Scroll to the add form
+            document.querySelector('.form-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

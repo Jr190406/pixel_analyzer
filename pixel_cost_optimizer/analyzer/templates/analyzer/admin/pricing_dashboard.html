@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale    <div class="container">
+        <div class="header">
+            <h1>Pricing Dashboard</h1>
+            <div>
+                <a href="{% url 'upload_image' %}" class="btn btn-secondary">← Back to Upload</a>
+                {% if user.is_superuser %}
+                    <a href="/admin/analyzer/defaultpricingrule/" class="btn btn-warning">Admin: Configure System Defaults</a>
+                {% endif %}
+            </div>
+        </div>
+    <title>Pricing Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .messages {
+            margin: 20px 0;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .edit-form {
+            display: none;
+        }
+        .active {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .inactive {
+            color: #6c757d;
+            text-decoration: line-through;
+        }
+        .section-title {
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Pricing Dashboard</h1>
+            <div>
+                <a href="{% url 'upload_image' %}" class="btn btn-secondary">← Back to Upload</a>
+                <a href="{% url 'document_history' %}" class="btn btn-success">📊 Analysis History</a>
+                {% if user.is_superuser %}
+                    <a href="/admin/analyzer/defaultpricingrule/" class="btn btn-warning">📋 Admin: System Defaults</a>
+                    <a href="/admin/analyzer/costsetting/" class="btn btn-warning">👥 Admin: All User Rules</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Superuser Admin Section -->
+        {% if user.is_superuser %}
+        <div class="form-section" style="background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%); color: #212529;">
+            <h3>🔧 Superuser Admin Controls</h3>
+            <div style="background-color: rgba(255,255,255,0.9); padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                <p><strong>👑 Admin Powers:</strong></p>
+                <ul style="margin: 0;">
+                    <li><strong>System Defaults:</strong> Configure fallback pricing for all users</li>
+                    <li><strong>User Management:</strong> View and edit all user pricing rules</li>
+                    <li><strong>Bulk Actions:</strong> Activate/deactivate multiple rules at once</li>
+                    <li><strong>Advanced Settings:</strong> Full database access through Django Admin</li>
+                </ul>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 5px;">
+                    <h4>📋 System Default Pricing</h4>
+                    <p>Manage fallback pricing rules that apply when users haven't set their own rules.</p>
+                    <a href="/admin/analyzer/defaultpricingrule/" class="btn btn-primary">
+                        ✏️ Edit System Defaults
+                    </a>
+                    <a href="/admin/analyzer/defaultpricingrule/add/" class="btn btn-success">
+                        ➕ Add Default Rule
+                    </a>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 5px;">
+                    <h4>👥 All User Rules</h4>
+                    <p>View, edit, and manage pricing rules created by all users in the system.</p>
+                    <a href="/admin/analyzer/costsetting/" class="btn btn-primary">
+                        ✏️ Edit User Rules
+                    </a>
+                    <a href="/admin/analyzer/costsetting/add/" class="btn btn-success">
+                        ➕ Add User Rule
+                    </a>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 5px;">
+                    <h4>⚙️ Advanced Admin</h4>
+                    <p>Access full Django admin interface for complete system management.</p>
+                    <a href="/admin/" class="btn btn-warning">
+                        🚀 Django Admin Panel
+                    </a>
+                    <a href="/admin/auth/user/" class="btn btn-secondary">
+                        👤 Manage Users
+                    </a>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; padding: 10px; background: rgba(220, 53, 69, 0.1); border-radius: 5px; border-left: 4px solid #dc3545;">
+                <strong>⚠️ Admin Note:</strong> Changes to system defaults affect all users. Use bulk actions in the admin panel for efficient management.
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Add New Pricing Rule Form -->
+        <div class="form-section">
+            <h3>Add New Pricing Rule</h3>
+            <div style="background-color: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                <p><strong>📋 How Pricing Works:</strong></p>
+                <ul style="margin: 0;">
+                    <li><strong>Your custom rules</strong> take priority over system defaults</li>
+                    <li><strong>System defaults</strong> are configured by the admin for fallback pricing</li>
+                    <li><strong>Coverage percentage</strong> is calculated based on non-white pixels in the document</li>
+                    <li><strong>No overlapping ranges</strong> are allowed for the same print type</li>
+                </ul>
+            </div>
+            <p><strong>Common Coverage Ranges:</strong> 
+                Logo/Small Graphics (10-15%), 
+                Medium Content (20-30%), 
+                Half Page (50%), 
+                Heavy Coverage (60-70%), 
+                Full Page (100%)
+            </p>
+            <form method="post" action="{% url 'add_pricing_rule' %}">
+                {% csrf_token %}
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label for="color">Type:</label>
+                        <select name="color" id="color" class="form-control" required>
+                            <option value="False">Black & White</option>
+                            <option value="True">Color</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="coverage_min">Min Coverage (%):</label>
+                        <input type="number" name="coverage_min" id="coverage_min" 
+                               class="form-control" min="0" max="100" step="0.01" required
+                               placeholder="e.g., 10">
+                    </div>
+                    <div class="form-group">
+                        <label for="coverage_max">Max Coverage (%):</label>
+                        <input type="number" name="coverage_max" id="coverage_max" 
+                               class="form-control" min="0" max="100" step="0.01" required
+                               placeholder="e.g., 15">
+                    </div>
+                    <div class="form-group">
+                        <label for="cost">Cost (₱):</label>
+                        <input type="number" name="cost" id="cost" 
+                               class="form-control" min="0" step="0.01" required
+                               placeholder="Your price">
+                    </div>
+                    <div class="form-group">
+                        <label for="reason">Description:</label>
+                        <input type="text" name="reason" id="reason" 
+                               class="form-control" placeholder="e.g., Color logo (10-15%)" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Rule</button>
+            </form>
+            
+            <!-- Quick Add Buttons for Common Ranges -->
+            <div style="margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 5px;">
+                <h4>Quick Add Common Pricing Rules:</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px;">
+                    <button onclick="fillForm(false, 10, 15, 1.00, 'B&W logo/small graphics')" class="btn btn-secondary">B&W Logo (10-15%)</button>
+                    <button onclick="fillForm(true, 10, 15, 2.00, 'Color logo/small graphics')" class="btn btn-secondary">Color Logo (10-15%)</button>
+                    <button onclick="fillForm(false, 20, 30, 1.50, 'B&W medium content')" class="btn btn-secondary">B&W Medium (20-30%)</button>
+                    <button onclick="fillForm(true, 20, 30, 3.50, 'Color medium content')" class="btn btn-secondary">Color Medium (20-30%)</button>
+                    <button onclick="fillForm(false, 50, 59.99, 2.00, 'B&W half page')" class="btn btn-secondary">B&W Half Page (~50%)</button>
+                    <button onclick="fillForm(true, 50, 59.99, 5.50, 'Color half page')" class="btn btn-secondary">Color Half Page (~50%)</button>
+                    <button onclick="fillForm(false, 60, 70, 2.25, 'B&W heavy coverage')" class="btn btn-secondary">B&W Heavy (60-70%)</button>
+                    <button onclick="fillForm(true, 60, 70, 6.50, 'Color heavy coverage')" class="btn btn-secondary">Color Heavy (60-70%)</button>
+                    <button onclick="fillForm(false, 100, 100, 3.00, 'B&W full page')" class="btn btn-secondary">B&W Full Page (100%)</button>
+                    <button onclick="fillForm(true, 100, 100, 10.00, 'Color full page')" class="btn btn-secondary">Color Full Page (100%)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Pricing Rules -->
+        <h2 class="section-title">Your Pricing Rules</h2>
+        {% if user_pricing_rules %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Coverage Range</th>
+                    <th>Cost</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in user_pricing_rules %}
+                <tr class="{% if not rule.is_active %}inactive{% endif %}">
+                    <td>{{ rule.get_color_display }}</td>
+                    <td>{{ rule.coverage_min }}% - {{ rule.coverage_max }}%</td>
+                    <td>₱{{ rule.cost }}</td>
+                    <td>{{ rule.reason }}</td>
+                    <td>
+                        {% if rule.is_active %}
+                            <span class="active">Active</span>
+                        {% else %}
+                            <span class="inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" onclick="toggleEditForm('{{ rule.id }}')" class="btn btn-warning">Edit</button>
+                        <form method="post" action="{% url 'toggle_pricing_rule' rule.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-secondary">
+                                {% if rule.is_active %}Deactivate{% else %}Activate{% endif %}
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'delete_pricing_rule' rule.id %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this rule?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr id="edit-form-{{ rule.id }}" class="edit-form">
+                    <td colspan="6">
+                        <form method="post" action="{% url 'edit_pricing_rule' rule.id %}">
+                            {% csrf_token %}
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; align-items: end;">
+                                <div>
+                                    <label>Min Coverage (%):</label>
+                                    <input type="number" name="coverage_min" value="{{ rule.coverage_min }}" class="form-control" min="0" max="100" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label>Max Coverage (%):</label>
+                                    <input type="number" name="coverage_max" value="{{ rule.coverage_max }}" class="form-control" min="0" max="100" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label>Cost (₱):</label>
+                                    <input type="number" name="cost" value="{{ rule.cost }}" class="form-control" min="0" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label>Description:</label>
+                                    <input type="text" name="reason" value="{{ rule.reason }}" class="form-control" required>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                        <button type="button" onclick="toggleEditForm('{{ rule.id }}')" class="btn btn-secondary" style="margin-top: 10px;">Cancel</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>You haven't created any pricing rules yet. Add your first rule using the form above!</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleEditForm(ruleId) {
+            const editForm = document.getElementById('edit-form-' + ruleId);
+            if (editForm.style.display === 'none' || editForm.style.display === '') {
+                editForm.style.display = 'table-row';
+            } else {
+                editForm.style.display = 'none';
+            }
+        }
+        
+        function fillForm(isColor, minCoverage, maxCoverage, cost, description) {
+            document.getElementById('color').value = isColor.toString();
+            document.getElementById('coverage_min').value = minCoverage;
+            document.getElementById('coverage_max').value = maxCoverage;
+            document.getElementById('cost').value = cost;
+            document.getElementById('reason').value = description;
+            
+            // Scroll to form
+            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

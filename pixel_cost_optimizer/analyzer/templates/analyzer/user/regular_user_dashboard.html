@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Document Analyzer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header h1 i {
+            color: #667eea;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            margin: 5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .recent-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #667eea;
+        }
+        
+        .recent-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .recent-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .recent-item .info .name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .recent-item .info .details {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .recent-item .cost {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #28a745;
+        }
+        
+        .upgrade-notice {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+        }
+        
+        .upgrade-notice h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .upgrade-notice p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .action-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .action-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .action-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .action-card p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #6c757d;
+            padding: 40px;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* Business Pricing Section */
+        .business-pricing-section {
+            margin: 40px 0;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .pricing-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+        
+        .pricing-header h2 {
+            font-size: 2rem;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .pricing-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .pricing-content {
+            padding: 40px;
+        }
+        
+        .price-display {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .price-main {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .currency {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .amount {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0 10px;
+        }
+        
+        .period {
+            font-size: 1.5rem;
+            color: #6c757d;
+        }
+        
+        .price-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0 auto;
+            max-width: fit-content;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-category h4 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-category h4 i {
+            color: #667eea;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: #495057;
+        }
+        
+        .feature-item i {
+            color: #28a745;
+            font-size: 1rem;
+        }
+        
+        .pricing-actions {
+            text-align: center;
+        }
+        
+        .btn-upgrade {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-upgrade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .upgrade-note {
+            margin-top: 15px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .upgrade-note i {
+            color: #28a745;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-tachometer-alt"></i>
+                Welcome, {{ user.first_name|default:user.username }}
+            </h1>
+            <div class="header-actions">
+                <a href="{% url 'regular_user_upload' %}" class="btn btn-primary">
+                    <i class="fas fa-upload"></i>
+                    Upload Document
+                </a>
+                <a href="{% url 'document_history' %}" class="btn btn-primary">
+                    <i class="fas fa-history"></i>
+                    View All History
+                </a>
+                <a href="{% url 'user_logout' %}" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_analyses }}</div>
+                <div class="stat-label">Total Documents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">₱{{ total_cost|floatformat:2 }}</div>
+                <div class="stat-label">Total Cost</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ monthly_analyses }}</div>
+                <div class="stat-label">This Month</div>
+            </div>
+        </div>
+
+        <!-- Premium Account Pricing -->
+        <div class="business-pricing-section">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-badge">
+                        <i class="fas fa-crown"></i>
+                        <span>UPGRADE AVAILABLE</span>
+                    </div>
+                    <h2>
+                        <i class="fas fa-briefcase"></i>
+                        Premium Account
+                    </h2>
+                    <p class="pricing-subtitle">Unlock advanced features and custom pricing control</p>
+                </div>
+                
+                <div class="pricing-content">
+                    <div class="price-display">
+                        <div class="price-main">
+                            <span class="currency">₱</span>
+                            <span class="amount">149</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <div class="price-note">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Temporary Pricing - Limited Time Offer!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="features-list">
+                        <div class="feature-category">
+                            <h4><i class="fas fa-star"></i> Premium Features</h4>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Custom Pricing Rules Management</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Advanced Analytics Dashboard</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Print Queue Management</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Revenue Tracking & Reports</span>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-category">
+                            <h4><i class="fas fa-cog"></i> Business Tools</h4>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Multiple Paper Size Support</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Customer Document Management</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Bulk Document Processing</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Priority Customer Support</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-actions">
+                        <a href="{% url 'business_owner_request' %}" class="btn-upgrade">
+                            <i class="fas fa-rocket"></i>
+                            Upgrade to Premium
+                        </a>
+                        <p class="upgrade-note">
+                            <i class="fas fa-shield-alt"></i>
+                            30-day money-back guarantee • Cancel anytime
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-section">
+            <h2 class="section-title">
+                <i class="fas fa-clock"></i>
+                Recent Activity
+            </h2>
+            
+            {% if recent_analyses %}
+                {% for analysis in recent_analyses %}
+                <div class="recent-item">
+                    <div class="info">
+                        <div class="name">{{ analysis.document_name }}</div>
+                        <div class="details">
+                            {{ analysis.page_count }} pages • {{ analysis.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                    <div class="cost">₱{{ analysis.overall_cost }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>No documents analyzed yet.</p>
+                    <p>Upload your first document to get started!</p>
+                    <a href="{% url 'regular_user_upload' %}" class="btn btn-primary" style="margin-top: 20px;">
+                        <i class="fas fa-upload"></i>
+                        Upload Your First Document
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>
+                    <i class="fas fa-cogs"></i>
+                    Document Analyzer System
+                </h3>
+                <p>An advanced document analysis platform that provides accurate cost estimation for printing services. Our system uses cutting-edge image processing technology to analyze PDF documents, calculate color coverage, and provide transparent pricing.</p>
+                
+                <div class="system-features">
+                    <div class="feature-item">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>PDF Document Processing</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-palette"></i>
+                        <span>Color & B&W Detection</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-calculator"></i>
+                        <span>Accurate Cost Calculation</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-print"></i>
+                        <span>Print Queue Management</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>
+                    <i class="fas fa-phone"></i>
+                    Contact Us
+                </h3>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email Support</strong>
+                            <p>armandoloro63@gmail.com</p>
+                            <p>fernandoogeraldez@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <strong>Phone Support</strong>
+                            <p>+639676288892</p>
+                            <p>Monday - Friday, 8:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Office Address</strong>
+                            <p>San Teodoro</p>
+                            <p>Bunawan, Agusan del Sur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Quick Help
+                </h3>
+                
+                <div class="help-links">
+                    <a href="#" class="help-link">
+                        <i class="fas fa-question-circle"></i>
+                        How to Upload Documents
+                    </a>
+                    <a href="#" class="help-link">
+                        <i class="fas fa-file-alt"></i>
+                        Understanding Pricing
+                    </a>
+                    <a href="#" class="help-link">
+                        <i class="fas fa-user-plus"></i>
+                        Upgrade to Business
+                    </a>
+                    <a href="#" class="help-link">
+                        <i class="fas fa-shield-alt"></i>
+                        Privacy & Security
+                    </a>
+                </div>
+                
+                <div class="social-links">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <div>
+                    <p>&copy; 2025 Document Analyzer System. All rights reserved.</p>
+                    <p>Powered by Advanced Image Processing Technology</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#" onclick="openTermsModal()">Terms of Service</a>
+                    <span>•</span>
+                    <a href="#">Privacy Policy</a>
+                    <span>•</span>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Terms of Service Modal -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content terms-modal-content">
+            <span class="close" onclick="closeTermsModal()">&times;</span>
+            <h2><i class="fas fa-file-contract"></i> Terms of Service</h2>
+            <div class="terms-content">
+                <div class="terms-section">
+                    <h3>1. Acceptance of Terms</h3>
+                    <p>By accessing and using the Document Analyzer System, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h3>2. Service Description</h3>
+                    <p>Document Analyzer System provides document analysis services including:</p>
+                    <ul>
+                        <li>PDF document processing and analysis</li>
+                        <li>Color and black & white page detection</li>
+                        <li>Cost estimation for printing services</li>
+                        <li>Print queue management for business users</li>
+                        <li>Document history and analytics</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>3. User Accounts</h3>
+                    <p>To access certain features, you may be required to create an account. You are responsible for:</p>
+                    <ul>
+                        <li>Maintaining the confidentiality of your account credentials</li>
+                        <li>All activities that occur under your account</li>
+                        <li>Providing accurate and complete information</li>
+                        <li>Promptly updating your account information</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>4. Acceptable Use</h3>
+                    <p>You agree to use the service only for lawful purposes and in accordance with these Terms. You shall not:</p>
+                    <ul>
+                        <li>Upload malicious files or content that violates any laws</li>
+                        <li>Attempt to gain unauthorized access to the system</li>
+                        <li>Use the service to transmit spam or unsolicited messages</li>
+                        <li>Interfere with or disrupt the integrity of the service</li>
+                        <li>Upload documents containing confidential information of third parties without permission</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>5. Document Privacy & Security</h3>
+                    <p>We are committed to protecting your documents and data:</p>
+                    <ul>
+                        <li>Documents are processed securely using industry-standard encryption</li>
+                        <li>Your documents are not shared with third parties without consent</li>
+                        <li>Documents may be temporarily stored for processing purposes</li>
+                        <li>You retain ownership of all uploaded documents</li>
+                        <li>We may delete documents after a specified retention period</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>6. Pricing & Payment</h3>
+                    <p>For our document analysis and printing services:</p>
+                    <ul>
+                        <li>Pricing is clearly displayed before service confirmation</li>
+                        <li>Costs are calculated based on document analysis results</li>
+                        <li>Business owners can set custom pricing rules</li>
+                        <li>Payment is required for print services</li>
+                        <li>Refunds may be available in accordance with our refund policy</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>7. Limitation of Liability</h3>
+                    <p>The Document Analyzer System is provided "as is" without warranty of any kind. We shall not be liable for:</p>
+                    <ul>
+                        <li>Any indirect, incidental, special, or consequential damages</li>
+                        <li>Loss of data, profits, or business interruption</li>
+                        <li>Errors or inaccuracies in document analysis results</li>
+                        <li>Service interruptions or technical issues</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>8. Service Modifications</h3>
+                    <p>We reserve the right to:</p>
+                    <ul>
+                        <li>Modify or discontinue the service with or without notice</li>
+                        <li>Update these terms of service at any time</li>
+                        <li>Change pricing and service features</li>
+                        <li>Suspend or terminate accounts for violations</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>9. Intellectual Property</h3>
+                    <p>The Document Analyzer System, including its software, algorithms, and user interface, is protected by intellectual property laws. You may not:</p>
+                    <ul>
+                        <li>Copy, modify, or reverse engineer our software</li>
+                        <li>Use our trademarks without permission</li>
+                        <li>Redistribute or resell our services</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>10. Contact Information</h3>
+                    <p>For questions about these Terms of Service, please contact us:</p>
+                    <ul>
+                        <li>Email: armandoloro63@gmail.com</li>
+                        <li>Phone: +639676288892</li>
+                        <li>Address: San Teodoro, Bunawan Agusan del Sur</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <p><strong>Last Updated:</strong> October 15, 2025</p>
+                    <p><em>By continuing to use our service, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px 20px 0 0;
+            margin-top: 50px;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .footer-section h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-section h3 i {
+            color: #667eea;
+        }
+
+        .footer-section p {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .system-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #495057;
+            font-size: 0.9rem;
+            padding: 8px 0;
+        }
+
+        .feature-item i {
+            color: #28a745;
+            width: 16px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .contact-item i {
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-top: 2px;
+            width: 20px;
+        }
+
+        .contact-item strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .contact-item p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .help-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .help-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #495057;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .help-link:hover {
+            background: #f8f9fa;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .help-link i {
+            color: #667eea;
+            width: 16px;
+        }
+
+        .social-links h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #e9ecef;
+            padding: 20px 40px;
+        }
+
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-links span {
+            color: #dee2e6;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                padding: 30px 20px;
+            }
+            
+            .footer-bottom-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .system-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Terms of Service Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .terms-modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .terms-modal-content h2 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.5rem;
+        }
+
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .terms-content {
+            padding: 30px;
+            max-height: calc(90vh - 100px);
+            overflow-y: auto;
+        }
+
+        .terms-section {
+            margin-bottom: 25px;
+        }
+
+        .terms-section h3 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terms-section p {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .terms-section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .terms-section li {
+            color: #6c757d;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .terms-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terms-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .terms-content::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        .terms-content::-webkit-scrollbar-thumb:hover {
+            background: #5a67d8;
+        }
+
+        @media (max-width: 768px) {
+            .terms-modal-content {
+                width: 95%;
+                margin: 5% auto;
+                max-height: 90vh;
+            }
+            
+            .terms-content {
+                padding: 20px;
+            }
+            
+            .terms-modal-content h2 {
+                padding: 20px;
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+
+    <script>
+        function openTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('termsModal');
+            if (event.target == modal) {
+                closeTermsModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeTermsModal();
+            }
+        });
+    </script>
+</body>
+</html>
