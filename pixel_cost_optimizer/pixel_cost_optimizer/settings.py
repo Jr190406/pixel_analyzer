@@ -91,20 +91,37 @@ WSGI_APPLICATION = 'pixel_cost_optimizer.wsgi.application'
 # }
 
 # MySQL Configuration for XAMPP/phpMyAdmin
+
+# Railway MySQL Configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pixel_cost_optimizer',
+        'NAME': 'railway',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'PASSWORD': 'FhXhesflPsXisYhhgaQnBTvyQnYOtVoo',
+        'HOST': 'trolley.proxy.rlwy.net',
+        'PORT': '19350',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
             'charset': 'utf8mb4',
         },
     }
 }
+
+#DATABASES = {
+#   'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'pixel_cost_optimizer',
+#        'USER': 'root',
+#        'PASSWORD': '',
+#        'HOST': 'localhost',
+#        'PORT': '3306',
+#        'OPTIONS': {
+#            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#            'charset': 'utf8mb4',
+#        },
+#    }
+#}
 
 
 # Password validation

@@ -2,4 +2,6 @@ Django==5.0.4
 PyMySQL==1.1.1
 Pillow==10.4.0
 PyPDF2==3.0.1
-pdfplumber==0.12.0
+pdfplumber==0.11.9
+PyMuPDF
+pdf2image
