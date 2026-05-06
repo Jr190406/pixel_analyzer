@@ -6,5 +6,3 @@ pdfplumber==0.11.9
 PyMuPDF
 pdf2image
 whitenoise==6.6.0
-numpy
-opencv-python-headless

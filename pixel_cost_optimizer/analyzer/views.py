@@ -14,7 +14,7 @@ from django.urls import is_valid_path, reverse
 from datetime import timedelta
 from PIL import Image
 import os
-import numpy as np 
+# import numpy as np 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import json
