@@ -1,0 +1,30 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "pixel_cost_optimizer/pixel_cost_optimizer/wsgi.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb",
+                "runtime": "python3.10"
+            }
+        },
+        {
+            "src": "build.sh",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "pixel_cost_optimizer/staticfiles"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/pixel_cost_optimizer/staticfiles/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "pixel_cost_optimizer/pixel_cost_optimizer/wsgi.py"
+        }
+    ]
+}
