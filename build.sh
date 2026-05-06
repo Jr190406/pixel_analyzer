@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install dependencies from the correct directory
-pip install -r pixel_cost_optimizer/requirements.txt
+pip install -r pixel_cost_optimizer/requirements.txt --break-system-packages
 
 # Go into the project directory
 cd pixel_cost_optimizer
